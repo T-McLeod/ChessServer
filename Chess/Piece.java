@@ -2,6 +2,7 @@ package Chess;
 
 import java.util.ArrayList;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 public abstract class Piece {
@@ -21,8 +22,14 @@ public abstract class Piece {
         yPosition = y;
         this.isWhite = isWhite;
 
+    }
+
+    public void displayPiece(int width, int height){
         graphic = new ImageView();
+        graphic.setImage(getImage());
         graphic.setPreserveRatio(true);
+        graphic.setFitWidth(width/4*3);
+        graphic.setFitHeight(height/4*3);
 
         graphic.setOnMousePressed(e -> {
             if(board.isWhiteMove() == isWhite){
@@ -64,13 +71,19 @@ public abstract class Piece {
                     Move move = new Move(board, getPosition(), finalPosition);
                     for(int i = 0; i < moves.size(); ++i){
                         if(move.equals(moves.get(i))){
-                            board.move(moves.get(i));
+                            move = moves.get(i);
+                            board.move(move);
+                            board.showMove(move);
                             break;
                         }
                     }
                 }
             }
         });
+    }
+
+    public Image getImage(){
+        return null;
     }
 
     public Boolean getIsWhite(){

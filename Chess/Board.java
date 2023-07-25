@@ -25,25 +25,18 @@ public class Board {
     private King blackKing;
     private Deque<Move> stack;
 
-    public Board(int initialX, int initialY, int width, int height){
-        this.initialX = initialX;
-        this.initialY = initialY;
-        this.width = width;
-        this.height = height;
+    public Board(){
+        long startTime, endTime;
+        buttonGrid = new GridPane();
+
         isWhiteMove = true;
         stack = new ArrayDeque<>();
 
         board = new Tile[widthSquares][heightSquares];
-        buttonGrid = new GridPane();
-        buttonGrid.setLayoutX(initialX);
-        buttonGrid.setLayoutY(initialY);
-        buttonGrid.setAlignment(Pos.CENTER);
-        buttonGrid.setPrefSize(8*20, 8*20);
 
         for(int x = 0; x < widthSquares; ++x){
             for(int y = 0; y< heightSquares; ++y){
-                Tile tile = new Tile(this, width/widthSquares, height/heightSquares, x, y);
-                buttonGrid.add(tile.getStackPane(), x, y);
+                Tile tile = new Tile(this, x, y);
                 board[x][y] = tile;
             }
         }
@@ -83,11 +76,7 @@ public class Board {
         blackKing = (King) getPiece(4, 0);
     }
 
-    public Board(int initialX, int initialY, int width, int height, String FEN){
-        this.initialX = initialX;
-        this.initialY = initialY;
-        this.width = width;
-        this.height = height;
+    public Board(String FEN){
         isWhiteMove = true;
         stack = new ArrayDeque<>();
 
@@ -100,7 +89,7 @@ public class Board {
 
         for(int x = 0; x < widthSquares; ++x){
             for(int y = 0; y< heightSquares; ++y){
-                Tile tile = new Tile(this, width/widthSquares, height/heightSquares, x, y);
+                Tile tile = new Tile(this, x, y);
                 buttonGrid.add(tile.getStackPane(), x, y);
                 board[x][y] = tile;
             }
@@ -109,7 +98,6 @@ public class Board {
         int slashes = 0;
         int p = 0;
         for(int i = 0; p < heightSquares * widthSquares + slashes; ++i){
-            System.out.println(i + ", " + p + ", " + slashes);
             Piece piece = null;
             int x = (p-slashes) % 8;
             int y = (p-slashes) / 8;
@@ -156,6 +144,30 @@ public class Board {
                 board[x][y].addPiece(piece);
             p++;
         }
+    }
+
+    public GridPane display(int initialX, int initialY, int width, int height){
+        this.initialX = initialX;
+        this.initialY = initialY;
+        this.width = width;
+        this.height = height;
+
+        buttonGrid = new GridPane();
+        buttonGrid.setLayoutX(initialX);
+        buttonGrid.setLayoutY(initialY);
+        buttonGrid.setAlignment(Pos.CENTER);
+        buttonGrid.setPrefSize(8*20, 8*20);
+
+        Tile tile;
+        for(int x = 0; x < widthSquares; ++x){
+            for(int y = 0; y< heightSquares; ++y){
+                tile = board[x][y];
+                tile.display(width/widthSquares, height/heightSquares);
+                buttonGrid.add(tile.getStackPane(), x, y);
+            }
+        }
+
+        return buttonGrid;
     }
 
     public GridPane getButtons(){
@@ -248,15 +260,9 @@ public class Board {
             move = move.getNextMove();
         }
         isWhiteMove = !isWhiteMove;
-        /*System.out.println(getMoves(isWhiteMove).size());
-        if(getMoves(isWhiteMove).size() == 2){
-            for(int i = 0; i<2; i++){
-                System.out.println(getMoves(isWhiteMove).get(i));
-            }
-        }*/
     }
 
-    public void unmove(){ //Does not account for "special" moves yet
+    public void unmove(){
         Move move = stack.pop();
         if(move.getNextMove() != null)
             unmove(move.getNextMove());
@@ -305,6 +311,17 @@ public class Board {
         }
         
         //isWhiteMove = !isWhiteMove;
+    }
+
+    public void showMove(Move move){
+        while(move != null){
+            int[] initial = move.getInitialPosition();
+            int[] fin = move.getFinalPosition();
+
+            board[initial[0]][initial[1]].updateDisplay();
+            board[fin[0]][fin[1]].updateDisplay();
+            move = move.getNextMove();
+        }
     }
 
     public int getInitialX(){

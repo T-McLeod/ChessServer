@@ -13,10 +13,6 @@ public class Knight extends Piece {
 
     public Knight(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
-        if(isWhite)
-            graphic.setImage(whiteIMG);
-        else
-            graphic.setImage(blackIMG);
     }
 
     @Override
@@ -51,6 +47,11 @@ public class Knight extends Piece {
         }
         
         return false;
+    }
+
+    @Override
+    public Image getImage(){
+        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

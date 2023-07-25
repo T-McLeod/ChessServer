@@ -16,10 +16,6 @@ public class Queen extends Piece{
     public Queen(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
         hasMoved = false;
-        if(isWhite)
-            graphic.setImage(whiteIMG);
-        else
-            graphic.setImage(blackIMG);
     }
 
     public ArrayList<Move> getLegalMoves(){
@@ -238,6 +234,11 @@ public class Queen extends Piece{
         }
 
         return false;
+    }
+
+    @Override
+    public Image getImage(){
+        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

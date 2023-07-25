@@ -15,10 +15,6 @@ public class Rook extends Piece{
     public Rook(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
         hasMoved = false;
-        if(isWhite)
-            graphic.setImage(whiteIMG);
-        else
-            graphic.setImage(blackIMG);
     }
 
     @Override
@@ -208,6 +204,11 @@ public class Rook extends Piece{
         }
 
         return false;
+    }
+
+    @Override
+    public Image getImage(){
+        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

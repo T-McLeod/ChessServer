@@ -25,14 +25,17 @@ public class Tile {
     private ImageView cursor;
     
 
-    public Tile(Board board, int width, int height, int x, int y){
+    public Tile(Board board, int x, int y){
         this.board = board;
-        this.width = width;
-        this.height = height;
         this.x = x;
         this.y = y;
         isPrimary = ((x + y) % 2) == 0;
         isOccupied = false;
+    }
+
+    public StackPane display(int width, int height){
+        this.width = width;
+        this.height = height;
 
         Image img = isPrimary ? primaryColorTile : secondaryColorTile;
         graphic = new ImageView(img);
@@ -46,6 +49,12 @@ public class Tile {
         cursor.setFitWidth(width/4);
         cursor.setFitHeight(height/4);
         cursor.setOpacity(.5);
+
+        if(isOccupied)
+            piece.displayPiece(width, height);
+        updateDisplay();
+
+        return stack;
     }
 
     public Boolean getIsOccupied(){
@@ -68,11 +77,13 @@ public class Tile {
         isOccupied = true;
         this.piece = piece;
         piece.setPosition(x, y);
+    }
 
-        piece.getGraphic().setFitWidth(width/4*3);
-        piece.getGraphic().setFitHeight(height/4*3);
-
-        stack.getChildren().add(piece.getGraphic());
+    public void updateDisplay(){
+        stack.getChildren().clear();
+        stack.getChildren().add(graphic);
+        if(isOccupied)
+            stack.getChildren().add(piece.getGraphic());
     }
 
     public void addCursor(){
@@ -84,9 +95,6 @@ public class Tile {
     }
 
     public void removePiece(){
-        if(!isOccupied)
-            return;
-        stack.getChildren().remove(piece.getGraphic());
         piece = null;
         isOccupied = false;
     }

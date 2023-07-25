@@ -18,10 +18,28 @@ public class Game {
     private Pane layout;
 
     public Game(){
+        Long startTime, endTime;
         layout = new Pane();
+
+        board = new Board();
+
+        board.move(new Move(board, new int[] {4, 6}, new int[] {4, 4}));
+        board.unmove();
+
+        /*System.out.println("Run 2: ");
+        startTime = System.nanoTime();
+        board = new Board(200, 200, 500, 500);
+        endTime = System.nanoTime();
+        System.out.println(String.format("New Board: %d miliseconds\n", (endTime-startTime)/1000000));
+
+        System.out.println("Run 3: ");
+        startTime = System.nanoTime();
         board = new Board(200, 200, 500, 500, "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");  
+        endTime = System.nanoTime();
+        System.out.println(String.format("Import Board: %d miliseconds\n", (endTime-startTime)/1000000));
+        */
+
         //System.out.println(board);
-        layout.getChildren().add(board.getButtons());
         //layout.setLayoutX(board.getInitialX());
         //layout.setLayoutY(board.getInitialY());
 
@@ -33,6 +51,11 @@ public class Game {
         blackPlayer.setLayoutY(board.getInitialY() - 60);
 
         //layout.getChildren().add(blackPlayer);
+    }
+
+    public Pane display(){
+        layout.getChildren().add(board.display(200, 200, 500, 500));
+        return layout;
     }
 
     public Pane getLayout(){

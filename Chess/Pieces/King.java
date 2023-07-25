@@ -18,10 +18,6 @@ public class King extends Piece{
     public King(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
         hasMoved = false;
-        if(isWhite)
-            graphic.setImage(whiteIMG);
-        else
-            graphic.setImage(blackIMG);
     }
 
     @Override
@@ -226,6 +222,11 @@ public class King extends Piece{
             addMove(moves, x, y);
         }
     }*/
+
+    @Override
+    public Image getImage(){
+        return isWhite ? whiteIMG : blackIMG;
+    }
 
     @Override
     public String toString(){

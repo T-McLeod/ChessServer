@@ -17,10 +17,11 @@ public class Pawn extends Piece{
     public Pawn(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
         hasMoved = false;
-        if(isWhite)
-            graphic.setImage(whiteIMG);
-        else
-            graphic.setImage(blackIMG);
+    }
+
+    @Override
+    public Image getImage(){
+        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override
