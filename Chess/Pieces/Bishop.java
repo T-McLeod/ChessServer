@@ -143,4 +143,9 @@ public class Bishop extends Piece{
     public String toString(){
         return("Bishop");
     }
+
+    @Override
+    public String notation(){
+        return(isWhite ? "B" : "b");
+    }
 }

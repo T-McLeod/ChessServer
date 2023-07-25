@@ -19,7 +19,8 @@ public class Game {
 
     public Game(){
         layout = new Pane();
-        board = new Board(200, 200, 500, 500);
+        board = new Board(200, 200, 500, 500, "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");  
+        //System.out.println(board);
         layout.getChildren().add(board.getButtons());
         //layout.setLayoutX(board.getInitialX());
         //layout.setLayoutY(board.getInitialY());

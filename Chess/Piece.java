@@ -144,4 +144,8 @@ public abstract class Piece {
         this.xPosition = x;
         this.yPosition = y;
     }
+
+    public String notation(){
+        return("");
+    }
 }

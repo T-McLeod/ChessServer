@@ -244,4 +244,9 @@ public class Queen extends Piece{
     public String toString(){
         return("Queen");
     }
+
+    @Override
+    public String notation(){
+        return(isWhite ? "Q" : "q");
+    }
 }

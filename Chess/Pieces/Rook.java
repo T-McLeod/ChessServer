@@ -214,4 +214,9 @@ public class Rook extends Piece{
     public String toString(){
         return("Rook");
     }
+
+    @Override
+    public String notation(){
+        return(isWhite ? "R" : "r");
+    }
 }

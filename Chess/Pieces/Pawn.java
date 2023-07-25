@@ -97,4 +97,9 @@ public class Pawn extends Piece{
     public String toString(){
         return("("+ xPosition + ", " + yPosition + ")");
     }
+
+    @Override
+    public String notation(){
+        return(isWhite ? "P" : "p");
+    }
 }

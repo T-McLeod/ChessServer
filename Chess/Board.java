@@ -9,6 +9,7 @@ import Chess.Pieces.*;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebHistory;
+import java.lang.*;
 
 public class Board {
     final public static int widthSquares = 8;
@@ -80,6 +81,81 @@ public class Board {
         whiteKing = (King) getPiece(4, 7);
         board[4][0].addPiece(new King(this, 4, 0, false));
         blackKing = (King) getPiece(4, 0);
+    }
+
+    public Board(int initialX, int initialY, int width, int height, String FEN){
+        this.initialX = initialX;
+        this.initialY = initialY;
+        this.width = width;
+        this.height = height;
+        isWhiteMove = true;
+        stack = new ArrayDeque<>();
+
+        board = new Tile[widthSquares][heightSquares];
+        buttonGrid = new GridPane();
+        buttonGrid.setLayoutX(initialX);
+        buttonGrid.setLayoutY(initialY);
+        buttonGrid.setAlignment(Pos.CENTER);
+        buttonGrid.setPrefSize(8*20, 8*20);
+
+        for(int x = 0; x < widthSquares; ++x){
+            for(int y = 0; y< heightSquares; ++y){
+                Tile tile = new Tile(this, width/widthSquares, height/heightSquares, x, y);
+                buttonGrid.add(tile.getStackPane(), x, y);
+                board[x][y] = tile;
+            }
+        }
+
+        int slashes = 0;
+        int p = 0;
+        for(int i = 0; p < heightSquares * widthSquares + slashes; ++i){
+            System.out.println(i + ", " + p + ", " + slashes);
+            Piece piece = null;
+            int x = (p-slashes) % 8;
+            int y = (p-slashes) / 8;
+
+            char character = FEN.charAt(i);
+            Boolean isWhite = Character.isUpperCase(character);
+            character = Character.toUpperCase(character);
+            switch (character) {
+                case 'B':
+                    piece = new Bishop(this, x, y, isWhite);
+                    break;
+                case 'K':
+                    piece = new King(this, x, y, isWhite);
+                    if(isWhite)
+                        whiteKing = (King) piece;
+                    else
+                        blackKing = (King) piece;
+                    break;
+                case 'N':
+                    piece = new Knight(this, x, y, isWhite);
+                    break;
+                case 'P':
+                    piece = new Pawn(this, x, y, isWhite);
+                    break;
+                case 'Q':
+                    piece = new Queen(this, x, y, isWhite);
+                    break;
+                case 'R':
+                    piece = new Rook(this, x, y, isWhite);
+                    break;
+                case '/':
+                    slashes++;
+                    break;
+                default:
+                    try {
+                        p += Character.getNumericValue(character) - 1;
+                    } catch (Exception e) {
+                        System.out.println("Bad Character: " + character);
+                    }
+                    break;
+            }
+            
+            if(piece != null)
+                board[x][y].addPiece(piece);
+            p++;
+        }
     }
 
     public GridPane getButtons(){
@@ -261,6 +337,33 @@ public class Board {
             }
 
         return false;
+    }
+
+    @Override
+    public String toString(){
+        Piece piece;
+        int emptyCounter = 0;
+        String str = "";
+        for(int y = 0; y < heightSquares; ++y){
+            for(int x = 0; x < widthSquares; ++x){
+                piece = getPiece(x, y);
+                if(piece == null){
+                    emptyCounter++;
+                } else {
+                    if(emptyCounter > 0)
+                        str += emptyCounter;
+                    emptyCounter = 0;
+                    str += piece.notation();
+                }
+            }
+            if(emptyCounter > 0)
+                str += emptyCounter;
+            emptyCounter = 0;
+            str += "/";
+        }
+
+        str = str.substring(0, str.length()-1) + " " + (isWhiteMove ? "w" : "b");
+        return str;
     }
 
     /*public void validateMoves(ArrayList<Move> moves){

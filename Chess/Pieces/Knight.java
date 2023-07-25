@@ -57,4 +57,9 @@ public class Knight extends Piece {
     public String toString(){
         return("Knight");
     }
+
+    @Override
+    public String notation(){
+        return(isWhite ? "N" : "n");
+    }
 }

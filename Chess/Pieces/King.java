@@ -232,4 +232,8 @@ public class King extends Piece{
         return("King");
     }
 
+    @Override
+    public String notation(){
+        return(isWhite ? "K" : "k");
+    }
 }
