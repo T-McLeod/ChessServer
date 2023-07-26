@@ -21,7 +21,7 @@ public class Game {
         Long startTime, endTime;
         layout = new Pane();
 
-        board = new Board();
+        board = new Board("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1");
 
         board.move(new Move(board, new int[] {4, 6}, new int[] {4, 4}));
         board.unmove();

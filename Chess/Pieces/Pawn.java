@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import Chess.Move;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.text.Position;
 
@@ -63,7 +64,7 @@ public class Pawn extends Piece{
         }
         
         testCase = new Move(board, new int[] {xPosition+1, (int) (yDirection * 2.5 + 3.5)}, new int[] {xPosition+1, (int) (yDirection * .5 + 3.5)});
-        if(yPosition == (int) (yDirection * .5 + 3.5) && lastMove.getInitialPiece() instanceof Pawn && board.getLastMove().equals(testCase)){
+        if(yPosition == (int) (yDirection * .5 + 3.5) && lastMove.getInitialPiece() instanceof Pawn && Arrays.equals(board.getLastMove().getFinalPosition(), new int[] {xPosition+1, (int) (yDirection * .5 + 3.5)})){
             System.out.println("en Passant");
         }
 

@@ -24,8 +24,14 @@ public class Board {
     private King whiteKing;
     private King blackKing;
     private Deque<Move> stack;
+    private int halfMoveClock; //unused
+    private int fullMoveCounter; //unused
 
     public Board(){
+        this("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+    }
+
+    public Board(String FEN){
         long startTime, endTime;
         buttonGrid = new GridPane();
 
@@ -41,63 +47,10 @@ public class Board {
             }
         }
 
-        //Setting up a traditional board
-        for(int i = 0; i < widthSquares; ++i){
-            Piece piece = new Pawn(this, i, 6, true);
-            board[i][6].addPiece(piece);
-        }
-
-        for(int i = 0; i < widthSquares; ++i){
-            Piece piece = new Pawn(this, i, 1, false);
-            board[i][1].addPiece(piece);
-        }
-
-        board[0][7].addPiece(new Rook(this, 0, 7, true));
-        board[7][7].addPiece(new Rook(this, 7, 7, true));
-        board[7][0].addPiece(new Rook(this, 7, 0, false));
-        board[0][0].addPiece(new Rook(this, 0, 0, false));
-
-        board[1][7].addPiece(new Knight(this, 1, 7, true));
-        board[6][7].addPiece(new Knight(this, 6, 7, true));
-        board[1][0].addPiece(new Knight(this, 1, 0, false));
-        board[6][0].addPiece(new Knight(this, 6, 0, false));
-
-        board[2][7].addPiece(new Bishop(this, 2, 7, true));
-        board[5][7].addPiece(new Bishop(this, 5, 7, true));
-        board[2][0].addPiece(new Bishop(this, 2, 0, false));
-        board[5][0].addPiece(new Bishop(this, 5, 0, false));
-
-        board[3][7].addPiece(new Queen(this, 3, 7, true));
-        board[3][0].addPiece(new Queen(this, 3, 0, false));
-
-        board[4][7].addPiece(new King(this, 4, 7, true));
-        whiteKing = (King) getPiece(4, 7);
-        board[4][0].addPiece(new King(this, 4, 0, false));
-        blackKing = (King) getPiece(4, 0);
-    }
-
-    public Board(String FEN){
-        isWhiteMove = true;
-        stack = new ArrayDeque<>();
-
-        board = new Tile[widthSquares][heightSquares];
-        buttonGrid = new GridPane();
-        buttonGrid.setLayoutX(initialX);
-        buttonGrid.setLayoutY(initialY);
-        buttonGrid.setAlignment(Pos.CENTER);
-        buttonGrid.setPrefSize(8*20, 8*20);
-
-        for(int x = 0; x < widthSquares; ++x){
-            for(int y = 0; y< heightSquares; ++y){
-                Tile tile = new Tile(this, x, y);
-                buttonGrid.add(tile.getStackPane(), x, y);
-                board[x][y] = tile;
-            }
-        }
-
         int slashes = 0;
         int p = 0;
-        for(int i = 0; p < heightSquares * widthSquares + slashes; ++i){
+        int i;
+        for(i = 0; p < heightSquares * widthSquares + slashes; ++i){
             Piece piece = null;
             int x = (p-slashes) % 8;
             int y = (p-slashes) / 8;
@@ -144,6 +97,44 @@ public class Board {
                 board[x][y].addPiece(piece);
             p++;
         }
+        i++;
+        isWhiteMove = Character.toUpperCase(FEN.charAt(i)) == 'W';
+
+        ++i;
+        Boolean cycle = true;
+        while(cycle){
+            ++i;
+            switch (FEN.charAt(i)) {
+                case 'K':
+                    whiteKing.setCastleKing(true);
+                    break;
+                case 'Q':
+                    whiteKing.setCastleQueen(true);
+                    break;
+                case 'k':
+                    blackKing.setCastleKing(true);
+                    break;
+                case 'q':
+                    blackKing.setCastleQueen(true);
+                    break;
+                case ' ':
+                    break;
+                default:
+                    cycle = false;
+                    break;
+            }
+        }
+
+        int x = (int) FEN.charAt(i);
+        if(x > 96){
+            stack.push(new Move(this, new int[] {1,1}, new int[]{x-97, 8 - Character.getNumericValue(FEN.charAt(++i))}));
+        } else{
+            stack.push(new Move(this, new int[] {1,1}, new int[]{1,1}));
+        }
+
+        i += 2;
+        halfMoveClock = FEN.charAt(i);
+        fullMoveCounter = FEN.charAt(i+2);
     }
 
     public GridPane display(int initialX, int initialY, int width, int height){

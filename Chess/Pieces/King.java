@@ -14,6 +14,8 @@ public class King extends Piece{
     private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/King.png");
     private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/King.png");
     Boolean hasMoved;
+    Boolean canCastleKing; //unused
+    Boolean canCastleQueen; //unused
 
     public King(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
@@ -23,6 +25,14 @@ public class King extends Piece{
     @Override
     public Boolean getHasMoved(){
         return hasMoved;
+    }
+
+    public void setCastleKing(Boolean bool){
+        canCastleKing = bool;
+    }
+
+    public void setCastleQueen(Boolean bool){
+        canCastleQueen = bool;
     }
 
     @Override
