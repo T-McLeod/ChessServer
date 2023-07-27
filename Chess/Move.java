@@ -8,12 +8,13 @@ import Chess.Pieces.Rook;
 
 public class Move {
     Piece initialPiece;
-    Piece finalPiece;
-    int[] initialPosition;
-    int[] finalPosition;
+    //Piece finalPiece; // X
+    int[] initialPosition; // X?
+    int finalX;
+    int finalY;
     Move nextMove;
-    Boolean changedMoveStatus;
-    String toString;
+    //Boolean changedMoveStatus; //X
+    String toString; // X ?
 
     //Add En Passant, Castling, Pins
     /*public Move(Piece piece, int[] initialPosition, int[] finalPosition){
@@ -35,31 +36,27 @@ public class Move {
         }
     }*/
 
-    public Move(Board board, int[] initialPosition, int[] finalPosition){
+    public Move(Board board, int[] initialPosition, int fx, int fy){
         this.initialPosition = initialPosition;
-        this.finalPosition = finalPosition;
+        finalX = fx;
+        finalY = fy;
         initialPiece = board.getPiece(initialPosition[0], initialPosition[1]);
-        finalPiece = board.getPiece(finalPosition[0], finalPosition[1]);
-        if(initialPiece != null)
-            changedMoveStatus = !initialPiece.getHasMoved();
-        else
-            changedMoveStatus = false;
     }
 
     public int[] getInitialPosition(){
         return initialPosition;
     }
 
-    public int[] getFinalPosition(){
-        return finalPosition;
+    public int getFinalX(){
+        return finalX;
+    }
+
+    public int getFinalY(){
+        return finalY;
     }
 
     public Piece getInitialPiece(){
         return initialPiece;
-    }
-
-    public Piece getFinalPiece(){
-        return finalPiece;
     }
 
     public Move getNextMove(){
@@ -78,19 +75,15 @@ public class Move {
     public boolean equals(Object obj){
         if(obj instanceof Move){
             Move move = (Move) obj;
-            return (Arrays.equals(initialPosition, move.getInitialPosition()) && Arrays.equals(finalPosition, move.getFinalPosition()));
+            return (Arrays.equals(initialPosition, move.getInitialPosition()) && finalX == move.getFinalX() && finalY == move.getFinalY());
         }
         return false;
-    }
-
-    public Boolean getChangedMoveStatus(){
-        return changedMoveStatus;
     }
 
     @Override
     public String toString(){
         if(toString == null)
-            return(String.format("%s to %d, %d", initialPiece, finalPosition[0], finalPosition[1]));
+            return(String.format("%s to %d, %d", initialPiece, finalX, finalY));
         return toString;
     }
 }

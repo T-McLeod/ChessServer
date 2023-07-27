@@ -23,9 +23,10 @@ public class Board {
     private GridPane buttonGrid;
     private King whiteKing;
     private King blackKing;
-    private Deque<Move> stack;
+    private Deque<Action> stack;
     private int halfMoveClock; //unused
     private int fullMoveCounter; //unused
+    private Tile targetSquare;
 
     public Board(){
         this("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -131,9 +132,9 @@ public class Board {
 
         int x = (int) FEN.charAt(i);
         if(x > 96){
-            stack.push(new Move(this, new int[] {1,1}, new int[]{x-97, 8 - Character.getNumericValue(FEN.charAt(++i))}));
+            //stack.push(new Move(this, new int[] {1,1}, new int[]{x-97, 8 - Character.getNumericValue(FEN.charAt(++i))}));
         } else{
-            stack.push(new Move(this, new int[] {1,1}, new int[]{1,1}));
+            //stack.push(new Move(this, new int[] {1,1}, new int[]{1,1}));
         }
 
         i += 2;
@@ -181,6 +182,10 @@ public class Board {
         return height;
     }
 
+    public Tile getTargetSquare() {
+        return targetSquare;
+    }
+
     public static Boolean isValid(int x, int y){
         return(x >= 0 && x < widthSquares && y >= 0 && y < heightSquares);
     }
@@ -218,11 +223,11 @@ public class Board {
         return board[coords[0]][coords[1]];
     }
 
-    public Deque<Move> getStack(){
+    public Deque<Action> getStack(){
         return stack;
     }
 
-    public Move getLastMove(){
+    public Action getLastAction(){
         return stack.peek();
     }
 
@@ -238,12 +243,13 @@ public class Board {
     }
 
     public void move(Move move){
-        stack.push(move);
+        Action action = new Action(this, move);
+        int ix = 0, iy = 0, fx = 0, fy = 0;
         while(move != null){
-            int ix = move.getInitialPosition()[0];
-            int iy = move.getInitialPosition()[1];
-            int fx = move.getFinalPosition()[0];
-            int fy = move.getFinalPosition()[1];
+            ix = move.getInitialPosition()[0];
+            iy = move.getInitialPosition()[1];
+            fx = move.getFinalX();
+            fy = move.getFinalY();
             Piece piece = move.getInitialPiece();
 
             board[ix][iy].removePiece();
@@ -254,43 +260,58 @@ public class Board {
             }
             move = move.getNextMove();
         }
+
+        targetSquare = null;
+        if((action.getMove().getInitialPiece() instanceof Pawn) && (Math.abs(fy - iy) == 2)){
+            targetSquare = getTile(new int[] {fx, Math.min(fy, iy) + 1});
+        }
+
+        stack.push(action);
         isWhiteMove = !isWhiteMove;
     }
 
     public void unmove(){
-        Move move = stack.pop();
-        if(move.getNextMove() != null)
-            unmove(move.getNextMove());
+        Action action = stack.pop();
+        Move move = action.getMove();
             
         int ix = move.getInitialPosition()[0];
         int iy = move.getInitialPosition()[1];
-        int fx = move.getFinalPosition()[0];
-        int fy = move.getFinalPosition()[1];
+        int fx = move.getFinalX();
+        int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
-        Piece finalPiece = move.getFinalPiece();
+        Piece takenPiece = action.getTakenPiece();
+
+        if(move.getNextMove() != null){
+            unmove(move.getNextMove(), takenPiece);
+            takenPiece = null;
+        };
 
         board[fx][fy].removePiece();
         if(initialPiece != null){
             board[ix][iy].addPiece(initialPiece);
             initialPiece.move(ix, iy);
         }
-        if(finalPiece != null)
-            board[fx][fy].addPiece(finalPiece);
-        if(move.getChangedMoveStatus()){
+        if(takenPiece != null)
+            board[fx][fy].addPiece(takenPiece);
+
+        targetSquare = action.getTargetSquare();
+        halfMoveClock = action.getHalfMoveClock();
+
+        if(action.isChangedCastleStatus()){
             initialPiece.reverseMove();
         }
         
         isWhiteMove = !isWhiteMove;
     }
 
-    public void unmove(Move move){
-        if(move.getNextMove() != null)
+    public void unmove(Move move, Piece takenPiece){
+        if(move.getNextMove() != null){
             unmove(move.getNextMove());
             
         int ix = move.getInitialPosition()[0];
         int iy = move.getInitialPosition()[1];
-        int fx = move.getFinalPosition()[0];
-        int fy = move.getFinalPosition()[1];
+        int fx = move.getFinalX();
+        int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
         Piece finalPiece = move.getFinalPiece();
 
