@@ -13,26 +13,14 @@ import javax.swing.text.Position;
 public class Pawn extends Piece{
     private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Pawn.png");
     private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Pawn.png");
-    Boolean hasMoved;
 
     public Pawn(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
-        hasMoved = false;
     }
 
     @Override
     public Image getImage(){
         return isWhite ? whiteIMG : blackIMG;
-    }
-
-    @Override
-    public Boolean getHasMoved(){
-        return hasMoved;
-    }
-
-    @Override
-    public void reverseMove(){
-        hasMoved = false;
     }
 
     @Override
@@ -43,7 +31,7 @@ public class Pawn extends Piece{
 
         if(Board.isValid(xPosition, yPosition + yDirection) && board.getTeamAt(xPosition, yPosition + yDirection) == 0){
             addMove(moves, xPosition, yPosition + yDirection);
-            if(!hasMoved && board.getTeamAt(xPosition, yPosition + yDirection*2) == 0){
+            if(yPosition == (isWhite ? 6 : 1) && board.getTeamAt(xPosition, yPosition + yDirection*2) == 0){
                 addMove(moves, xPosition, yPosition + yDirection * 2);
             }
         }
@@ -76,7 +64,6 @@ public class Pawn extends Piece{
     public void move(int x, int y){
         this.xPosition = x;
         this.yPosition = y;
-        hasMoved = true;
     }
 
     @Override

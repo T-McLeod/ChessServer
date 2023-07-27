@@ -14,8 +14,8 @@ public class King extends Piece{
     private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/King.png");
     private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/King.png");
     Boolean hasMoved;
-    Boolean canCastleKing; //unused
-    Boolean canCastleQueen; //unused
+    Rook kingSide; //unused
+    Rook queenSide; //unused
 
     public King(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
@@ -27,12 +27,20 @@ public class King extends Piece{
         return hasMoved;
     }
 
-    public void setCastleKing(Boolean bool){
-        canCastleKing = bool;
+    public Rook getKingRook(){
+        return kingSide;
     }
 
-    public void setCastleQueen(Boolean bool){
-        canCastleQueen = bool;
+    public Rook getQueenRook(){
+        return queenSide;
+    }
+
+    public void setKingRook(Rook rook){
+        kingSide = rook;
+    }
+
+    public void setQueenRook(Rook rook){
+        queenSide = rook;
     }
 
     @Override
@@ -50,10 +58,10 @@ public class King extends Piece{
             }
         }
 
-        Piece rook = board.getPiece(7, yPosition);
+        Rook rook = isWhite ? kingSide : queenSide;
         Boolean legal = true;
         Move move;
-        if(!hasMoved && rook instanceof Rook && !((Rook) rook).hasMoved){
+        if(rook != null && !rook.getHasMoved()){
             for(int i = 5; i < 7; ++i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(board, new int[] {xPosition, yPosition}, new int[] {i, yPosition});
@@ -77,9 +85,9 @@ public class King extends Piece{
             }
         }
 
-        rook = board.getPiece(0, yPosition);
+        rook = isWhite ? queenSide : kingSide;
         legal = true;
-        if(!hasMoved && rook instanceof Rook && !((Rook) rook).hasMoved){
+        if(rook != null && !rook.getHasMoved()){
             for(int i = 3; i > 1; --i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(board, new int[] {xPosition, yPosition}, new int[] {i, yPosition});

@@ -106,16 +106,20 @@ public class Board {
             ++i;
             switch (FEN.charAt(i)) {
                 case 'K':
-                    whiteKing.setCastleKing(true);
+                    whiteKing.setKingRook((Rook) getPiece(7, 7));
+                    whiteKing.getKingRook().hasMoved  = false;
                     break;
                 case 'Q':
-                    whiteKing.setCastleQueen(true);
+                    whiteKing.setQueenRook((Rook) getPiece(0, 7));
+                    whiteKing.getQueenRook().hasMoved  = false;
                     break;
                 case 'k':
-                    blackKing.setCastleKing(true);
+                    blackKing.setKingRook((Rook) getPiece(7, 0));
+                    blackKing.getKingRook().hasMoved  = false;
                     break;
                 case 'q':
-                    blackKing.setCastleQueen(true);
+                    blackKing.setQueenRook((Rook) getPiece(0,0));
+                    blackKing.getQueenRook().hasMoved  = false;
                     break;
                 case ' ':
                     break;
