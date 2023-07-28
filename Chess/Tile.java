@@ -113,7 +113,7 @@ public class Tile {
 
     @Override
     public String toString(){
-        return(String.format("%s at (%d, %d)", piece, x, y));
+        return(String.format("%c%d", (char) (x+97), y+1));
     }
 
 }

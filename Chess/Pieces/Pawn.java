@@ -2,6 +2,7 @@ package Chess.Pieces;
 
 import Chess.Board;
 import Chess.Piece;
+import Chess.Tile;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import Chess.Move;
@@ -36,24 +37,28 @@ public class Pawn extends Piece{
             }
         }
 
-        if(Board.isValid(xPosition-1, yPosition + yDirection) && board.getTeamAt(xPosition-1, yPosition + yDirection) == yDirection)
-            addMove(moves, xPosition-1, yPosition + yDirection);
-
-        if(Board.isValid(xPosition+1, yPosition + yDirection) && board.getTeamAt(xPosition+1, yPosition + yDirection) == yDirection)
-            addMove(moves, xPosition+1, yPosition + yDirection);    
-
-        //Add En Passant
-        Move lastMove = board.getLastMove();
-        Move testCase = new Move(board, new int[] {xPosition-1, (int) (yDirection * 2.5 + 3.5)}, new int[] {xPosition-1, (int) (yDirection * .5 + 3.5)});
-        if(board.getTargetSquare() == ){
-            Move newMove = new Move(board, getPosition(), new int[] {xPosition-1, yPosition + yDirection});
-            newMove.setNextMove(new Move(board, lastMove.getInitialPosition(), lastMove.getFinalPosition()));
-            addMove(moves, newMove);
+        if(Board.isValid(xPosition-1, yPosition + yDirection)){
+            Tile tile = board.getTile(xPosition-1, yPosition + yDirection);
+            if(tile.getIsOccupied() && tile.getPiece().getIsWhite() != isWhite){
+                addMove(moves, xPosition-1, yPosition + yDirection);
+            }
+            if(board.getTargetSquare() == tile){
+                Move newMove = new Move(this, xPosition-1, yPosition + yDirection);
+                newMove.setNextMove(new Move(null, xPosition-1, yPosition));
+                addMove(moves, newMove);
+            }
         }
-        
-        testCase = new Move(board, new int[] {xPosition+1, (int) (yDirection * 2.5 + 3.5)}, new int[] {xPosition+1, (int) (yDirection * .5 + 3.5)});
-        if(yPosition == (int) (yDirection * .5 + 3.5) && lastMove.getInitialPiece() instanceof Pawn && Arrays.equals(board.getLastMove().getFinalPosition(), new int[] {xPosition+1, (int) (yDirection * .5 + 3.5)})){
-            System.out.println("en Passant");
+
+        if(Board.isValid(xPosition+1, yPosition + yDirection)){
+            Tile tile = board.getTile(xPosition+1, yPosition + yDirection);
+            if(tile.getIsOccupied() && tile.getPiece().getIsWhite() != isWhite){
+                addMove(moves, xPosition+1, yPosition + yDirection);
+            }
+            if(board.getTargetSquare() == tile){
+                Move newMove = new Move(this, xPosition+1, yPosition + yDirection);
+                newMove.setNextMove(new Move(null, xPosition+1, yPosition));
+                addMove(moves, newMove);
+            }
         }
 
         return moves;

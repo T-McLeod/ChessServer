@@ -58,10 +58,9 @@ public class King extends Piece{
             }
         }
 
-        Rook rook = isWhite ? kingSide : queenSide;
         Boolean legal = true;
         Move move;
-        if(rook != null && !rook.getHasMoved()){
+        if(kingSide != null && !kingSide.getHasMoved()){
             for(int i = 5; i < 7; ++i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(this, i, yPosition);
@@ -79,14 +78,13 @@ public class King extends Piece{
             }
             if(legal){
                 move = new Move(this, 6, yPosition);
-                move.setNextMove(new Move(this, 5, yPosition));
+                move.setNextMove(new Move(kingSide, 5, yPosition));
                 moves.add(move);
             }
         }
 
-        rook = isWhite ? queenSide : kingSide;
         legal = true;
-        if(rook != null && !rook.getHasMoved()){
+        if(queenSide != null && !queenSide.getHasMoved()){
             for(int i = 3; i > 1; --i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(this, i, yPosition);
@@ -107,7 +105,7 @@ public class King extends Piece{
             }
             if(legal){
                 move = new Move(this, 2, yPosition);
-                move.setNextMove(new Move(this, 3, yPosition));
+                move.setNextMove(new Move(queenSide, 3, yPosition));
                 moves.add(move);
             }
         }

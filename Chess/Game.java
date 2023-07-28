@@ -21,7 +21,8 @@ public class Game {
         Long startTime, endTime;
         layout = new Pane();
 
-        board = new Board("rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d5 0 1");
+        //board = new Board("rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d5 0 1");
+        board = new Board();
         //System.out.println(board.getLastMove());
 
         /*System.out.println("Run 2: ");

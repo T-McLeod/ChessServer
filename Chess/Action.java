@@ -14,6 +14,8 @@ public class Action {
         takenPiece = board.getPiece(move.getFinalX(), move.getFinalY());
         isCapture = takenPiece == null;
         targetSquare = board.getTargetSquare();
+        Piece piece = move.getInitialPiece();
+        initialSquare = board.getTile(piece.getX(), piece.getY());
         //halfMoveClock
         //ChangedCastleStatus
     }

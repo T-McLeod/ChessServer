@@ -243,23 +243,25 @@ public class Board {
 
     public Action move(Move move){
         Action action = new Action(this, move);
-        int ix = 0, iy = 0, fx = 0, fy = 0;
+        Piece initialPiece = null;
+        int fx = 0, fy = 0;
         while(move != null){
+            initialPiece = move.getInitialPiece();
             fx = move.getFinalX();
             fy = move.getFinalY();
-            Piece piece = move.getInitialPiece();
 
-            board[piece.getX()][piece.getY()].removePiece();
             board[fx][fy].removePiece();
-            if(piece != null){
-                board[fx][fy].addPiece(piece);
-                piece.move(fx, fy);
+            if(initialPiece != null){
+                board[initialPiece.getX()][initialPiece.getY()].removePiece();
+                board[fx][fy].addPiece(initialPiece);
+                initialPiece.move(fx, fy);
             }
             move = move.getNextMove();
         }
 
         targetSquare = null;
-        if((action.getMove().getInitialPiece() instanceof Pawn) && (Math.abs(fy - iy) == 2)){
+        int iy = action.getInitialSquare().getY();
+        if((initialPiece instanceof Pawn) && (Math.abs(fy - iy) == 2)){
             targetSquare = getTile(fx, Math.min(fy, iy) + 1);
         }
 
@@ -304,7 +306,7 @@ public class Board {
     }
 
     public void unmove(Action action){
-        Move move = action.getMove();
+        Move move = action.getMove().getNextMove();
         Piece takenPiece = action.getTakenPiece();
         if(move.getNextMove() != null){
             unmove(action);
@@ -338,6 +340,7 @@ public class Board {
             board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
+        System.out.println(targetSquare);
     }
 
     public int getInitialX(){
