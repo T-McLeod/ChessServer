@@ -33,7 +33,7 @@ public abstract class Piece {
 
         graphic.setOnMousePressed(e -> {
             if(board.isWhiteMove() == isWhite){
-                board.getTile(new int[] {this.xPosition, this.yPosition}).toFront();
+                board.getTile(xPosition, yPosition).toFront();
                 mouseIX = e.getSceneX();
                 mouseIY = e.getSceneY();
                 pieceIX = graphic.getTranslateX();
@@ -41,8 +41,8 @@ public abstract class Piece {
                 ArrayList<Move> moves = getLegalMoves();
                 for(int i = 0; i < moves.size(); ++i){
                     Move move = moves.get(i);
-                    int[] coords = move.getFinalPosition();
-                    board.getTile(coords).addCursor();
+                    //int[] coords = move.getFinalPosition();
+                    board.getTile(move.getFinalX(), move.getFinalY()).addCursor();
                 }
             }
         });
@@ -62,18 +62,17 @@ public abstract class Piece {
                 ArrayList<Move> moves = getLegalMoves();
                 for(int i = 0; i < moves.size(); ++i){
                     Move move = moves.get(i);
-                    int[] coords = move.getFinalPosition();
-                    board.getTile(coords).removeCursor();
+                    //int[] coords = move.getFinalPosition();
+                    board.getTile(move.getFinalX(), move.finalY).removeCursor();
                 }
 
                 int[] finalPosition = board.pixelToTileCoords(e.getSceneX(), e.getSceneY());
                 if(Board.isValid(finalPosition[0], finalPosition[1])){
-                    Move move = new Move(board, getPosition(), finalPosition);
+                    Move move = new Move(this, finalPosition[0], finalPosition[1]);
                     for(int i = 0; i < moves.size(); ++i){
                         if(move.equals(moves.get(i))){
                             move = moves.get(i);
-                            board.move(move);
-                            board.showMove(move);
+                            board.showAction(board.move(move));
                             break;
                         }
                     }
@@ -90,8 +89,12 @@ public abstract class Piece {
         return isWhite;
     }
 
-    public int[] getPosition(){
-        return new int[] {xPosition, yPosition};
+    public int getX(){
+        return xPosition;
+    }
+
+    public int getY(){
+        return yPosition;
     }
 
     public void setPosition(int x, int y){
@@ -118,8 +121,7 @@ public abstract class Piece {
     public void addMove(ArrayList<Move> moves, int x, int y){
     //check for check:
         // switch tiles
-        Piece takenPiece = board.getPiece(x, y);
-        Move move = new Move(board, new int[] {xPosition, yPosition}, new int[] {x, y});
+        Move move = new Move(this, x, y);
         board.move(move);
 
         // getMoves() for other color
@@ -130,7 +132,7 @@ public abstract class Piece {
         // switch tiles back
         board.unmove();
 
-        moves.add(new Move(board, new int[] {xPosition, yPosition}, new int[] {x, y}));
+        moves.add(new Move(this, x, y));
     }
 
     public void addMove(ArrayList<Move> moves, Move move){

@@ -5,6 +5,7 @@ public class Action {
     boolean isCapture;
     Piece takenPiece;
     Tile targetSquare;
+    Tile initialSquare;
     int halfMoveClock;
     boolean changedCastleStatus;
 
@@ -19,6 +20,10 @@ public class Action {
 
     public Move getMove(){
         return move;
+    }
+
+    public Tile getInitialSquare(){
+        return initialSquare;
     }
 
     public Piece getTakenPiece(){

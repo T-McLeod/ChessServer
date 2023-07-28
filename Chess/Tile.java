@@ -61,8 +61,12 @@ public class Tile {
         return isOccupied;
     }
 
-    public int[] getPosition(){
-        return(new int[] {x, y});
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
     }
 
     public Piece getPiece(){

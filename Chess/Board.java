@@ -219,8 +219,8 @@ public class Board {
         return board[x][y].getPiece();
     }
 
-    public Tile getTile(int[] coords){
-        return board[coords[0]][coords[1]];
+    public Tile getTile(int x, int y){
+        return board[x][y];
     }
 
     public Deque<Action> getStack(){
@@ -238,21 +238,18 @@ public class Board {
     }
 
     public void addPiece(Piece piece){
-        int[] position = piece.getPosition();
-        board[position[0]][position[1]].addPiece(piece);
+        board[piece.getX()][piece.getY()].addPiece(piece);
     }
 
-    public void move(Move move){
+    public Action move(Move move){
         Action action = new Action(this, move);
         int ix = 0, iy = 0, fx = 0, fy = 0;
         while(move != null){
-            ix = move.getInitialPosition()[0];
-            iy = move.getInitialPosition()[1];
             fx = move.getFinalX();
             fy = move.getFinalY();
             Piece piece = move.getInitialPiece();
 
-            board[ix][iy].removePiece();
+            board[piece.getX()][piece.getY()].removePiece();
             board[fx][fy].removePiece();
             if(piece != null){
                 board[fx][fy].addPiece(piece);
@@ -263,26 +260,28 @@ public class Board {
 
         targetSquare = null;
         if((action.getMove().getInitialPiece() instanceof Pawn) && (Math.abs(fy - iy) == 2)){
-            targetSquare = getTile(new int[] {fx, Math.min(fy, iy) + 1});
+            targetSquare = getTile(fx, Math.min(fy, iy) + 1);
         }
 
         stack.push(action);
         isWhiteMove = !isWhiteMove;
+        return action;
     }
 
     public void unmove(){
         Action action = stack.pop();
         Move move = action.getMove();
-            
-        int ix = move.getInitialPosition()[0];
-        int iy = move.getInitialPosition()[1];
+        
+        Tile initialSquare = action.getInitialSquare();
+        int ix = initialSquare.getX();
+        int iy = initialSquare.getY();
         int fx = move.getFinalX();
         int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
         Piece takenPiece = action.getTakenPiece();
 
         if(move.getNextMove() != null){
-            unmove(move.getNextMove(), takenPiece);
+            unmove(action);
             takenPiece = null;
         };
 
@@ -304,38 +303,39 @@ public class Board {
         isWhiteMove = !isWhiteMove;
     }
 
-    public void unmove(Move move, Piece takenPiece){
+    public void unmove(Action action){
+        Move move = action.getMove();
+        Piece takenPiece = action.getTakenPiece();
         if(move.getNextMove() != null){
-            unmove(move.getNextMove());
+            unmove(action);
+            takenPiece = null;
+        }
             
-        int ix = move.getInitialPosition()[0];
-        int iy = move.getInitialPosition()[1];
+        Tile initialSquare = action.getInitialSquare();
+        int ix = initialSquare.getX();
+        int iy = initialSquare.getY();
         int fx = move.getFinalX();
         int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
-        Piece finalPiece = move.getFinalPiece();
 
         board[fx][fy].removePiece();
         if(initialPiece != null){
             board[ix][iy].addPiece(initialPiece);
             initialPiece.move(ix, iy);
         }
-        if(finalPiece != null)
-            board[fx][fy].addPiece(finalPiece);
-        if(move.getChangedMoveStatus()){
-            initialPiece.reverseMove();
-        }
+        if(takenPiece != null)
+            board[fx][fy].addPiece(takenPiece);
         
         //isWhiteMove = !isWhiteMove;
     }
 
-    public void showMove(Move move){
+    public void showAction(Action action){
+        Move move = action.getMove();
+        Tile initialSquare = action.getInitialSquare();
         while(move != null){
-            int[] initial = move.getInitialPosition();
-            int[] fin = move.getFinalPosition();
 
-            board[initial[0]][initial[1]].updateDisplay();
-            board[fin[0]][fin[1]].updateDisplay();
+            board[initialSquare.getX()][initialSquare.getY()].updateDisplay();
+            board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
     }
@@ -346,12 +346,6 @@ public class Board {
 
     public int getInitialY(){
         return initialY;
-    }
-
-    public void switchTiles(int x1, int y1, int x2, int y2){
-        Tile tmp = getTile(new int[] {x1, y1});
-        board[x1][y1] = getTile(new int[] {x2, y2});
-        board[x2][y2] = tmp;
     }
 
     public King getKing(Boolean isWhite){

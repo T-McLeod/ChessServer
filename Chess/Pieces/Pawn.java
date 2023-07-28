@@ -45,7 +45,7 @@ public class Pawn extends Piece{
         //Add En Passant
         Move lastMove = board.getLastMove();
         Move testCase = new Move(board, new int[] {xPosition-1, (int) (yDirection * 2.5 + 3.5)}, new int[] {xPosition-1, (int) (yDirection * .5 + 3.5)});
-        if(yPosition == (int) (yDirection * .5 + 3.5) && lastMove.getInitialPiece() instanceof Pawn && board.getLastMove().equals(testCase)){
+        if(board.getTargetSquare() == ){
             Move newMove = new Move(board, getPosition(), new int[] {xPosition-1, yPosition + yDirection});
             newMove.setNextMove(new Move(board, lastMove.getInitialPosition(), lastMove.getFinalPosition()));
             addMove(moves, newMove);

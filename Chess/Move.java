@@ -9,12 +9,12 @@ import Chess.Pieces.Rook;
 public class Move {
     Piece initialPiece;
     //Piece finalPiece; // X
-    int[] initialPosition; // X?
+    //int[] initialPosition; // X?
     int finalX;
     int finalY;
     Move nextMove;
     //Boolean changedMoveStatus; //X
-    String toString; // X ?
+    //String toString; // X ?
 
     //Add En Passant, Castling, Pins
     /*public Move(Piece piece, int[] initialPosition, int[] finalPosition){
@@ -36,15 +36,17 @@ public class Move {
         }
     }*/
 
-    public Move(Board board, int[] initialPosition, int fx, int fy){
+    /*public Move(Board board, int[] initialPosition, int fx, int fy){
         this.initialPosition = initialPosition;
         finalX = fx;
         finalY = fy;
         initialPiece = board.getPiece(initialPosition[0], initialPosition[1]);
-    }
+    }*/
 
-    public int[] getInitialPosition(){
-        return initialPosition;
+    public Move(Piece piece, int fx, int fy){
+        finalX = fx;
+        finalY = fy;
+        initialPiece = piece;
     }
 
     public int getFinalX(){
@@ -67,23 +69,23 @@ public class Move {
         nextMove = move;
     }
 
-    public void setString(String str){
+    /*public void setString(String str){
         toString = str;
-    }
+    }*/
 
     @Override
     public boolean equals(Object obj){
         if(obj instanceof Move){
             Move move = (Move) obj;
-            return (Arrays.equals(initialPosition, move.getInitialPosition()) && finalX == move.getFinalX() && finalY == move.getFinalY());
+            return (initialPiece == move.initialPiece && finalX == move.getFinalX() && finalY == move.getFinalY());
         }
         return false;
     }
 
-    @Override
+    /*@Override
     public String toString(){
         if(toString == null)
             return(String.format("%s to %d, %d", initialPiece, finalX, finalY));
         return toString;
-    }
+    }*/
 }
