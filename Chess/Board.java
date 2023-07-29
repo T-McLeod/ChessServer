@@ -225,7 +225,7 @@ public class Board {
 
     public Tile getTile(String str){
         System.out.println(str);
-        return board[(int) str.charAt(0)-97][Character.getNumericValue(str.charAt(1)) - 1];
+        return board[(int) str.charAt(0)-97][8 - Character.getNumericValue(str.charAt(1)) - 1];
     }
 
     public Deque<Action> getStack(){
@@ -345,7 +345,6 @@ public class Board {
             board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
-        System.out.println(targetSquare);
     }
 
     public int getInitialX(){

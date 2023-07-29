@@ -7,14 +7,14 @@ import javafx.scene.Scene;
 public class Main extends Application {
     public void start(Stage primaryStage){
         Game game = new Game();
-        //game.display();
+        game.display();
 
         Scene scene = new Scene(game.getLayout(), primaryStage.getWidth(), primaryStage.getHeight());
 
         primaryStage.setTitle("Chess");
         primaryStage.setScene(scene);
         primaryStage.setFullScreen(true);
-        //primaryStage.show();
+        primaryStage.show();
     }
 
     public static void main(String[] args){

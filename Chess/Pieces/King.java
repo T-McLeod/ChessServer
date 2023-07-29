@@ -60,7 +60,7 @@ public class King extends Piece{
 
         Boolean legal = true;
         Move move;
-        if(kingSide != null && !kingSide.getHasMoved()){
+        if(kingSide != null && !kingSide.getHasMoved() && !board.isInCheck(isWhite)){
             for(int i = 5; i < 7; ++i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(this, i, yPosition);
@@ -85,7 +85,7 @@ public class King extends Piece{
 
         legal = true;
         if(queenSide != null && !queenSide.getHasMoved()){
-            for(int i = 3; i > 1; --i){
+            for(int i = 5; i > 1; --i){
                 if(board.getTeamAt(i, yPosition) == 0){
                     move = new Move(this, i, yPosition);
                     board.move(move);
