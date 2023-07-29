@@ -309,12 +309,11 @@ public class Board {
         int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
 
-        board[fx][fy].removePiece();
-        initialPiece.move(ix, iy);
-        board[ix][iy].addPiece(initialPiece);
         if(move.getNextMove() != null){
             unmove(move.getNextMove());
         }
+        board[fx][fy].removePiece();
+        board[ix][iy].addPiece(initialPiece);
     }
 
     public void showAction(Action action){
@@ -326,6 +325,7 @@ public class Board {
             board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
+        System.out.println(this);
     }
 
     public int getInitialX(){
