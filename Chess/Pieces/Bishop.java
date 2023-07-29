@@ -135,6 +135,10 @@ public class Bishop extends Piece{
         return false;
     }
 
+    public static Image getImage(boolean isWhite){
+        return isWhite ? whiteIMG : blackIMG;
+    }
+
     @Override
     public Image getImage(){
         return isWhite ? whiteIMG : blackIMG;

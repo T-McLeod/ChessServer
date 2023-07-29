@@ -9,44 +9,18 @@ import Chess.Pieces.Rook;
 public class Move {
     Piece initialPiece;
     //Piece finalPiece; // X
-    //int[] initialPosition; // X?
+    int initialX;
+    int initialY;
     int finalX;
     int finalY;
     Move nextMove;
-    //Boolean changedMoveStatus; //X
-    //String toString; // X ?
-
-    //Add En Passant, Castling, Pins
-    /*public Move(Piece piece, int[] initialPosition, int[] finalPosition){
-        this.piece = piece;
-        this.initialPosition = initialPosition;
-        this.finalPosition = finalPosition;
-        changedMoveStatus = false;
-        if(piece instanceof Rook){
-            Rook temp = (Rook) piece;
-            changedMoveStatus = !temp.getHasMoved();
-        }
-        if(piece instanceof Pawn){
-            Pawn temp = (Pawn) piece;
-            changedMoveStatus = !temp.getHasMoved();
-        }
-        if(piece instanceof King){
-            King temp = (King) piece;
-            changedMoveStatus = !temp.getHasMoved();
-        }
-    }*/
-
-    /*public Move(Board board, int[] initialPosition, int fx, int fy){
-        this.initialPosition = initialPosition;
-        finalX = fx;
-        finalY = fy;
-        initialPiece = board.getPiece(initialPosition[0], initialPosition[1]);
-    }*/
 
     public Move(Piece piece, int fx, int fy){
         finalX = fx;
         finalY = fy;
         initialPiece = piece;
+        initialX = piece.getX();
+        initialY = piece.getY();
     }
 
     public int getFinalX(){
@@ -55,6 +29,14 @@ public class Move {
 
     public int getFinalY(){
         return finalY;
+    }
+
+    public int getInitialX(){
+        return initialX;
+    }
+
+    public int getInitialY(){
+        return initialY;
     }
 
     public Piece getInitialPiece(){
@@ -67,6 +49,10 @@ public class Move {
 
     public void setNextMove(Move move){
         nextMove = move;
+    }
+
+    public Move copy(){
+        return new Move(initialPiece, finalX, finalY);
     }
 
     /*public void setString(String str){
@@ -82,10 +68,14 @@ public class Move {
         return false;
     }
 
-    /*@Override
+    @Override
     public String toString(){
-        if(toString == null)
-            return(String.format("%s to %d, %d", initialPiece, finalX, finalY));
-        return toString;
-    }*/
+        String str = "";
+        Move move = this;
+        while(move != null){
+            str += String.format("%s to %d, %d; ", move.initialPiece, move.finalX, move.finalY);
+            move = move.getNextMove();
+        }
+        return str;
+    }
 }

@@ -22,11 +22,11 @@ public class Game {
         layout = new Pane();
 
         //board = new Board("rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d5 0 1");
-        String str = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2";
-        System.out.println(str);
+        String str = "rnbqkbnr/pp1p2Pp/8/2p1p3/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2";
         board = new Board(str);
-        System.out.println(board);
-        System.out.println(board.toString().equals(str));
+        /*Move move = board.getPiece(6, 1).getLegalMoves().get(0);
+        System.out.println(move);
+        board.move(move);*/
         //System.out.println(board.getLastMove());
 
         /*System.out.println("Run 2: ");

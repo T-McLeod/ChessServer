@@ -134,12 +134,12 @@ public class Board {
         targetSquare = null;
         if(x > 96){
             targetSquare = getTile(FEN.substring(i, i+2));
+            i++;
         }
 
-        i += 3;
+        i += 2;
         halfMoveClock = Character.getNumericValue(FEN.charAt(i));
         fullMoveCounter = Character.getNumericValue(FEN.charAt(i+2));
-        System.out.printf("%d, %d\n", halfMoveClock, fullMoveCounter);
     }
 
     public GridPane display(int initialX, int initialY, int width, int height){
@@ -203,6 +203,10 @@ public class Board {
         return moves;
     }
 
+    public ArrayList<Move> getMoves(){
+        return getMoves(isWhiteMove);
+    }
+
     public int getTeamAt(int x, int y){
         if(!isValid(x, y))
             throw new IndexOutOfBoundsException(String.format("Invalid Position: (%d, %d)", x, y));
@@ -224,7 +228,6 @@ public class Board {
     }
 
     public Tile getTile(String str){
-        System.out.println(str);
         return board[(int) str.charAt(0)-97][8 - Character.getNumericValue(str.charAt(1)) - 1];
     }
 
@@ -249,23 +252,26 @@ public class Board {
     public Action move(Move move){
         Action action = new Action(this, move);
         Piece initialPiece = null;
-        int fx = 0, fy = 0;
+        int fx = 0, fy = 0, iy = 0;
         while(move != null){
             initialPiece = move.getInitialPiece();
             fx = move.getFinalX();
             fy = move.getFinalY();
 
-            board[fx][fy].removePiece();
+            if(action.getTakenPiece() == null)
+                action.setTakenPiece(board[fx][fy].removePiece());
             if(initialPiece != null){
                 board[initialPiece.getX()][initialPiece.getY()].removePiece();
                 board[fx][fy].addPiece(initialPiece);
                 initialPiece.move(fx, fy);
+            } else{
+                board[fx][fy].removePiece();
             }
+            iy = move.getInitialY();
             move = move.getNextMove();
         }
 
         targetSquare = null;
-        int iy = action.getInitialSquare().getY();
         if((initialPiece instanceof Pawn) && (Math.abs(fy - iy) == 2)){
             targetSquare = getTile(fx, Math.min(fy, iy) + 1);
         }
@@ -278,27 +284,13 @@ public class Board {
     public void unmove(){
         Action action = stack.pop();
         Move move = action.getMove();
-        
-        Tile initialSquare = action.getInitialSquare();
-        int ix = initialSquare.getX();
-        int iy = initialSquare.getY();
-        int fx = move.getFinalX();
-        int fy = move.getFinalY();
+
         Piece initialPiece = move.getInitialPiece();
+
+        unmove(move);
         Piece takenPiece = action.getTakenPiece();
-
-        if(move.getNextMove() != null){
-            unmove(action);
-            takenPiece = null;
-        };
-
-        board[fx][fy].removePiece();
-        if(initialPiece != null){
-            board[ix][iy].addPiece(initialPiece);
-            initialPiece.move(ix, iy);
-        }
         if(takenPiece != null)
-            board[fx][fy].addPiece(takenPiece);
+            board[takenPiece.getX()][takenPiece.getY()].addPiece(takenPiece);
 
         targetSquare = action.getTargetSquare();
         halfMoveClock = action.getHalfMoveClock();
@@ -310,38 +302,27 @@ public class Board {
         isWhiteMove = !isWhiteMove;
     }
 
-    public void unmove(Action action){
-        Move move = action.getMove().getNextMove();
-        Piece takenPiece = action.getTakenPiece();
-        if(move.getNextMove() != null){
-            unmove(action);
-            takenPiece = null;
-        }
-            
-        Tile initialSquare = action.getInitialSquare();
-        int ix = initialSquare.getX();
-        int iy = initialSquare.getY();
+    public void unmove(Move move){
+        int ix = move.getInitialX();
+        int iy = move.getInitialY();
         int fx = move.getFinalX();
         int fy = move.getFinalY();
         Piece initialPiece = move.getInitialPiece();
 
         board[fx][fy].removePiece();
-        if(initialPiece != null){
-            board[ix][iy].addPiece(initialPiece);
-            initialPiece.move(ix, iy);
+        initialPiece.move(ix, iy);
+        board[ix][iy].addPiece(initialPiece);
+        if(move.getNextMove() != null){
+            unmove(move.getNextMove());
         }
-        if(takenPiece != null)
-            board[fx][fy].addPiece(takenPiece);
-        
-        //isWhiteMove = !isWhiteMove;
     }
 
     public void showAction(Action action){
         Move move = action.getMove();
-        Tile initialSquare = action.getInitialSquare();
         while(move != null){
-
-            board[initialSquare.getX()][initialSquare.getY()].updateDisplay();
+            System.out.print(move);
+            board[move.getInitialX()][move.getInitialY()].updateDisplay();
+            System.out.println(board[move.getFinalX()][move.getFinalY()].getPiece().getGraphic());
             board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
@@ -357,6 +338,14 @@ public class Board {
 
     public King getKing(Boolean isWhite){
         return isWhite ? whiteKing : blackKing;
+    }
+
+    public int getTileWidth(){
+        return width / 8;
+    }
+
+    public int getTileHeight(){
+        return height / 8;
     }
 
     public Boolean isInCheck(Boolean isWhite){

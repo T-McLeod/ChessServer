@@ -11,11 +11,10 @@ public class Action {
 
     public Action(Board board, Move move){
         this.move = move;
-        takenPiece = board.getPiece(move.getFinalX(), move.getFinalY());
-        isCapture = takenPiece == null;
+        //takenPiece = board.getPiece(move.getFinalX(), move.getFinalY());
+        isCapture = !(takenPiece == null);
         targetSquare = board.getTargetSquare();
         Piece piece = move.getInitialPiece();
-        initialSquare = board.getTile(piece.getX(), piece.getY());
         //halfMoveClock
         //ChangedCastleStatus
     }
@@ -30,6 +29,10 @@ public class Action {
 
     public Piece getTakenPiece(){
         return takenPiece;
+    }
+
+    public void setTakenPiece(Piece piece){
+        takenPiece = piece;
     }
 
     public Tile getTargetSquare(){

@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
 public class Tile {
     private final static Image primaryColorTile = new Image("./Chess/Assets/Tiles/DarkBrown.png");
@@ -91,16 +93,19 @@ public class Tile {
     }
 
     public void addCursor(){
-        stack.getChildren().add(this.cursor);
+        if(!stack.getChildren().contains(cursor))
+            stack.getChildren().add(this.cursor);
     }
 
     public void removeCursor(){
         stack.getChildren().remove(cursor);
     }
 
-    public void removePiece(){
+    public Piece removePiece(){
+        Piece tmp = piece;
         piece = null;
         isOccupied = false;
+        return tmp;
     }
 
     public void toFront(){
@@ -111,9 +116,17 @@ public class Tile {
         this.piece = piece;
     }
 
+    public void addImageView(ImageView view){
+        Rectangle rect = new Rectangle(width, height);
+        rect.setFill(Color.WHITE);
+        view.setFitWidth(width/4*3);
+        view.setFitHeight(height/4*3);
+        stack.getChildren().addAll(rect, view);
+    }
+
     @Override
     public String toString(){
-        return(String.format("%c%d", (char) (x+97), y+1));
+        return(String.format("%c%d", (char) (x+97), 8-y));
     }
 
 }

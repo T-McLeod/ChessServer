@@ -83,64 +83,11 @@ public class Rook extends Piece{
             addMove(moves, x, y);
         }
 
-        /*//Does not account for variants where king does not start on back rank
-        King king = board.getKing(isWhite);
-        if(!hasMoved && !king.hasMoved){
-            int curX = 4;
-            int kingY = king.getPosition()[1];
-            Boolean condition = true;
-            if((xPosition == 7) ^ isWhite){ //queenside castle
-                //Check to make sure no pieces between start and end x
-                int endX = 6;
-                while(curX <= endX){
-                    if(board.getTeamAt(curX, kingY) != 0){
-                        condition = false;
-                        curX--;
-                        break;
-                    }
-                    board.getTile(new int[] {curX, kingY}).setPiece(king);
-                    curX++;
-                }
-
-                condition = condition && !board.isInCheck(isWhite);
-
-                while(curX >= king.getPosition()[0]){
-                    board.getTile(new int[] {curX, kingY}).setPiece(null);
-                    curX--;
-                }
-
-                //Create new move for king
-                Move move = new Move(king, king.getPosition(), new int[] {6, kingY});
-                move.setNextMove(new Move(this, new int[] {xPosition, yPosition}, new int[] {5, kingY}));
-                //Add extra move
-                moves.add(move);
-            } else { //kingside castle
-                int endX = 2;
-                while(curX >= endX){
-                    if(board.getTeamAt(curX, kingY) != 0){
-                        condition = false;
-                        curX++;
-                        break;
-                    }
-                    board.getTile(new int[] {curX, kingY}).setPiece(king);
-                    curX--;
-                }
-
-                condition = condition && !board.isInCheck(isWhite);
-
-                while(curX <= king.getPosition()[0]){
-                    board.getTile(new int[] {curX, kingY}).setPiece(null);
-                    curX++;
-                }
-
-                Move move = new Move(king, king.getPosition(), new int[] {endX, kingY});
-                move.setNextMove(new Move(this, new int[] {xPosition, yPosition}, new int[] {3, kingY}));
-                moves.add(move);
-            }
-
-        }*/
-
         return moves;
+    }
+
+    public static Image getImage(boolean isWhite){
+        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

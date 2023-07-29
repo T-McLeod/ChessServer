@@ -54,6 +54,10 @@ public class Knight extends Piece {
         return isWhite ? whiteIMG : blackIMG;
     }
 
+    public static Image getImage(boolean isWhite){
+        return isWhite ? whiteIMG : blackIMG;
+    }
+
     @Override
     public String toString(){
         return("Knight");

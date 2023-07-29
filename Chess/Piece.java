@@ -2,6 +2,7 @@ package Chess;
 
 import java.util.ArrayList;
 
+import Chess.Pieces.Pawn;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -41,7 +42,6 @@ public abstract class Piece {
                 ArrayList<Move> moves = getLegalMoves();
                 for(int i = 0; i < moves.size(); ++i){
                     Move move = moves.get(i);
-                    //int[] coords = move.getFinalPosition();
                     board.getTile(move.getFinalX(), move.getFinalY()).addCursor();
                 }
             }
@@ -62,15 +62,18 @@ public abstract class Piece {
                 ArrayList<Move> moves = getLegalMoves();
                 for(int i = 0; i < moves.size(); ++i){
                     Move move = moves.get(i);
-                    //int[] coords = move.getFinalPosition();
-                    board.getTile(move.getFinalX(), move.finalY).removeCursor();
+                    board.getTile(move.getFinalX(), move.getFinalY()).removeCursor();
                 }
-
                 int[] finalPosition = board.pixelToTileCoords(e.getSceneX(), e.getSceneY());
                 if(Board.isValid(finalPosition[0], finalPosition[1])){
                     Move move = new Move(this, finalPosition[0], finalPosition[1]);
                     for(int i = 0; i < moves.size(); ++i){
                         if(move.equals(moves.get(i))){
+                            if(move.getInitialPiece() instanceof Pawn && (move.getFinalY() == 0 || move.getFinalY() == 7)){
+                                Pawn pawn = (Pawn) move.getInitialPiece();
+                                pawn.promptForPromotion(move);
+                                return;
+                            }
                             move = moves.get(i);
                             board.showAction(board.move(move));
                             break;
@@ -107,6 +110,8 @@ public abstract class Piece {
     }
 
     public ImageView getGraphic(){
+        if(graphic == null)
+            displayPiece(board.getTileWidth(), board.getTileHeight());
         return graphic;
     }
 
@@ -121,18 +126,7 @@ public abstract class Piece {
     public void addMove(ArrayList<Move> moves, int x, int y){
     //check for check:
         // switch tiles
-        Move move = new Move(this, x, y);
-        board.move(move);
-
-        // getMoves() for other color
-        if(board.isInCheck(isWhite)){
-            board.unmove();
-            return;
-        }
-        // switch tiles back
-        board.unmove();
-
-        moves.add(new Move(this, x, y));
+        addMove(moves, new Move(this, x, y));
     }
 
     public void addMove(ArrayList<Move> moves, Move move){

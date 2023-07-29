@@ -241,6 +241,10 @@ public class Queen extends Piece{
         return isWhite ? whiteIMG : blackIMG;
     }
 
+    public static Image getImage(boolean isWhite){
+        return isWhite ? whiteIMG : blackIMG;
+    }
+
     @Override
     public String toString(){
         return("Queen");
