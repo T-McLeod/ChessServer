@@ -131,15 +131,15 @@ public class Board {
         }
 
         int x = (int) FEN.charAt(i);
+        targetSquare = null;
         if(x > 96){
-            //stack.push(new Move(this, new int[] {1,1}, new int[]{x-97, 8 - Character.getNumericValue(FEN.charAt(++i))}));
-        } else{
-            //stack.push(new Move(this, new int[] {1,1}, new int[]{1,1}));
+            targetSquare = getTile(FEN.substring(i, i+2));
         }
 
-        i += 2;
-        halfMoveClock = FEN.charAt(i);
-        fullMoveCounter = FEN.charAt(i+2);
+        i += 3;
+        halfMoveClock = Character.getNumericValue(FEN.charAt(i));
+        fullMoveCounter = Character.getNumericValue(FEN.charAt(i+2));
+        System.out.printf("%d, %d\n", halfMoveClock, fullMoveCounter);
     }
 
     public GridPane display(int initialX, int initialY, int width, int height){
@@ -221,6 +221,11 @@ public class Board {
 
     public Tile getTile(int x, int y){
         return board[x][y];
+    }
+
+    public Tile getTile(String str){
+        System.out.println(str);
+        return board[(int) str.charAt(0)-97][Character.getNumericValue(str.charAt(1)) - 1];
     }
 
     public Deque<Action> getStack(){
@@ -392,7 +397,35 @@ public class Board {
             str += "/";
         }
 
-        str = str.substring(0, str.length()-1) + " " + (isWhiteMove ? "w" : "b");
+        str = str.substring(0, str.length()-1) + " " + (isWhiteMove ? "w" : "b") + " ";
+
+        boolean castle = false;
+        if(!whiteKing.getHasMoved()){
+            if(!whiteKing.getKingRook().getHasMoved()){
+                castle = true;
+                str += "K";
+            } if(!whiteKing.getQueenRook().getHasMoved()){
+                castle = true;
+                str += "Q";
+            }
+        } if(!blackKing.getHasMoved()){
+            if(!blackKing.getKingRook().getHasMoved()){
+                castle = true;
+                str += "k";
+            } if(!blackKing.getQueenRook().getHasMoved()){
+                castle = true;
+                str += "q";
+            }
+        }
+
+        if(castle)
+            str += " ";
+
+        str += targetSquare == null ? "-" : targetSquare.toString();
+        str += " ";
+
+        str += halfMoveClock + " " + fullMoveCounter;
+
         return str;
     }
 

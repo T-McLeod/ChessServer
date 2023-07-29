@@ -22,7 +22,11 @@ public class Game {
         layout = new Pane();
 
         //board = new Board("rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d5 0 1");
-        board = new Board();
+        String str = "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2";
+        System.out.println(str);
+        board = new Board(str);
+        System.out.println(board);
+        System.out.println(board.toString().equals(str));
         //System.out.println(board.getLastMove());
 
         /*System.out.println("Run 2: ");
