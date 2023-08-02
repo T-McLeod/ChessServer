@@ -3,6 +3,8 @@ package Chess;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashSet;
+import java.util.Set;
 
 import Chess.Pieces.*;
 
@@ -27,6 +29,8 @@ public class Board {
     private int halfMoveClock; //unused
     private int fullMoveCounter; //unused
     private Tile targetSquare;
+    private Set<Piece> whitePieces;
+    private Set<Piece> blackPieces;
 
     public Board(){
         this("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
@@ -34,6 +38,8 @@ public class Board {
 
     public Board(String FEN){
         long startTime, endTime;
+        whitePieces = new HashSet<>();
+        blackPieces = new HashSet<>();
         buttonGrid = new GridPane();
 
         isWhiteMove = true;
@@ -61,26 +67,27 @@ public class Board {
             character = Character.toUpperCase(character);
             switch (character) {
                 case 'B':
-                    piece = new Bishop(this, x, y, isWhite);
+                    addPiece(new Bishop(this, x, y, isWhite));
                     break;
                 case 'K':
-                    piece = new King(this, x, y, isWhite);
+                    King king = new King(this, x, y, isWhite);
+                    addPiece(king);
                     if(isWhite)
-                        whiteKing = (King) piece;
+                        whiteKing = king;
                     else
-                        blackKing = (King) piece;
+                        blackKing = king;
                     break;
                 case 'N':
-                    piece = new Knight(this, x, y, isWhite);
+                    addPiece(new Knight(this, x, y, isWhite));
                     break;
                 case 'P':
-                    piece = new Pawn(this, x, y, isWhite);
+                    addPiece(new Pawn(this, x, y, isWhite));
                     break;
                 case 'Q':
-                    piece = new Queen(this, x, y, isWhite);
+                    addPiece(new Queen(this, x, y, isWhite));
                     break;
                 case 'R':
-                    piece = new Rook(this, x, y, isWhite);
+                    addPiece(new Rook(this, x, y, isWhite));
                     break;
                 case '/':
                     slashes++;
@@ -93,9 +100,6 @@ public class Board {
                     }
                     break;
             }
-            
-            if(piece != null)
-                board[x][y].addPiece(piece);
             p++;
         }
         i++;
@@ -190,7 +194,8 @@ public class Board {
         return(x >= 0 && x < widthSquares && y >= 0 && y < heightSquares);
     }
 
-    public ArrayList<Move> getMoves(Boolean forWhite){
+    /*public ArrayList<Move> getMoves(Boolean forWhite){
+
         ArrayList<Move> moves = new ArrayList<>();
         Piece piece;
         for(int x = 0; x < widthSquares; ++x)
@@ -199,7 +204,18 @@ public class Board {
                 if(piece != null && piece.getIsWhite() == forWhite)
                     moves.addAll(piece.getLegalMoves());
             }
-        
+        return moves;
+    }*/
+
+    public ArrayList<Move> getMoves(Boolean forWhite){
+        long startTime, endTime;
+        ArrayList<Move> moves = new ArrayList<>();
+        for (Piece piece1 : forWhite ? whitePieces : blackPieces) {
+            startTime = System.nanoTime();
+            moves.addAll(piece1.getLegalMoves());
+            endTime = System.nanoTime();
+            System.out.printf("%s took %d microseconds\n", piece1.toString(), (endTime - startTime)/1000);
+        }
         return moves;
     }
 
@@ -247,6 +263,7 @@ public class Board {
 
     public void addPiece(Piece piece){
         board[piece.getX()][piece.getY()].addPiece(piece);
+        (piece.getIsWhite() ? whitePieces : blackPieces).add(piece);
     }
 
     public Action move(Move move){
@@ -319,13 +336,11 @@ public class Board {
     public void showAction(Action action){
         Move move = action.getMove();
         while(move != null){
-            System.out.print(move);
             board[move.getInitialX()][move.getInitialY()].updateDisplay();
-            System.out.println(board[move.getFinalX()][move.getFinalY()].getPiece().getGraphic());
             board[move.getFinalX()][move.getFinalY()].updateDisplay();
             move = move.getNextMove();
         }
-        System.out.println(this);
+        System.out.println(toString());
     }
 
     public int getInitialX(){

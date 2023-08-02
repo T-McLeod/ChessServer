@@ -1,5 +1,7 @@
 package Chess;
 
+import java.util.ArrayList;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -18,33 +20,32 @@ public class Game {
     private Pane layout;
 
     public Game(){
-        Long startTime, endTime;
+        Long startTime, split1, endTime;
         layout = new Pane();
 
-        //board = new Board("rnbqkbnr/ppp1pppp/8/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d5 0 1");
-        String str = "rnbqkbnr/pp1p2Pp/8/2p1p3/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2";
-        board = new Board(str);
-        /*Move move = board.getPiece(6, 1).getLegalMoves().get(0);
-        System.out.println(move);
-        board.move(move);*/
-        //System.out.println(board.getLastMove());
-
-        /*System.out.println("Run 2: ");
+        board = new Board("rnbq1rk1/2p2ppp/p4n2/1p1pp3/1b2P3/2NPBN2/PPP1BPPP/R2Q1RK1 w - 0 1");
+        board.getMoves();
+        System.out.println("Run: ");
+        ArrayList<Move> moves;
+        int totalMovesChecked = 0;
         startTime = System.nanoTime();
-        board = new Board(200, 200, 500, 500);
+        board = new Board();
+        board.getMoves();
+        board.move(new Move(board.getPiece(4, 6), 4, 4));
+        /*split1 = System.nanoTime();
+        board.getMoves();
+        for(int i = 0; i < 100; ++i){
+            moves = board.getMoves();
+            for (Move move : moves) {
+                board.move(move);
+                board.unmove();
+            }
+            board.move(moves.get(0));
+            totalMovesChecked += moves.size();
+        }*/
         endTime = System.nanoTime();
-        System.out.println(String.format("New Board: %d miliseconds\n", (endTime-startTime)/1000000));
-
-        System.out.println("Run 3: ");
-        startTime = System.nanoTime();
-        board = new Board(200, 200, 500, 500, "rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2");  
-        endTime = System.nanoTime();
-        System.out.println(String.format("Import Board: %d miliseconds\n", (endTime-startTime)/1000000));
-        */
-
-        //System.out.println(board);
-        //layout.setLayoutX(board.getInitialX());
-        //layout.setLayoutY(board.getInitialY());
+        //System.out.println(String.format("  New Board: %d microseconds\n", (split1-startTime)/1000));
+        //System.out.println(String.format("  Checked 100 Positions (AVG Moves: %d): %d microseconds\n", totalMovesChecked/100, (endTime-split1)/1000));
 
         Rectangle banner = new Rectangle(0, 0, board.getWidth(), 60);
         banner.setFill(Color.LIGHTBLUE);

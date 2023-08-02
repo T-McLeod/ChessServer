@@ -91,13 +91,11 @@ public class Pawn extends Piece{
 
     @Override
     public void addMove(ArrayList<Move> moves, int fx, int fy){
-        System.out.println("Spot 1: " + board.getPiece(6, 7));
         Move move = new Move(this, fx, fy);
         if(fy == 7 || fy == 0){
             Move copy = move.copy();
             copy.setNextMove(new Move(new Queen(board, fx, fy, isWhite), fx, fy));
             super.addMove(moves, copy);
-            System.out.println("Spot 2: " + board.getPiece(6, 7));
 
             copy = move.copy();
             move.copy().setNextMove(new Move(new Knight(board, fx, fy, isWhite), fx, fy));
