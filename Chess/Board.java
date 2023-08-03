@@ -211,10 +211,10 @@ public class Board {
         long startTime, endTime;
         ArrayList<Move> moves = new ArrayList<>();
         for (Piece piece1 : forWhite ? whitePieces : blackPieces) {
-            startTime = System.nanoTime();
+            //startTime = System.nanoTime();
             moves.addAll(piece1.getLegalMoves());
-            endTime = System.nanoTime();
-            System.out.printf("%s took %d microseconds\n", piece1.toString(), (endTime - startTime)/1000);
+            //endTime = System.nanoTime();
+            //System.out.printf("%s took %d microseconds\n", piece1.toString(), (endTime - startTime)/1000);
         }
         return moves;
     }

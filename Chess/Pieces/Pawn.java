@@ -32,7 +32,8 @@ public class Pawn extends Piece{
 
         int yDirection = isWhite ? -1 : 1;
 
-        if(Board.isValid(xPosition, yPosition + yDirection) && board.getTeamAt(xPosition, yPosition + yDirection) == 0){
+
+        if(board.getTeamAt(xPosition, yPosition + yDirection) == 0){
             addMove(moves, xPosition, yPosition + yDirection);
             if(yPosition == (isWhite ? 6 : 1) && board.getTeamAt(xPosition, yPosition + yDirection*2) == 0){
                 addMove(moves, xPosition, yPosition + yDirection * 2);

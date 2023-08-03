@@ -54,7 +54,7 @@ public class Game {
         blackPlayer.setLayoutX(board.getInitialX());
         blackPlayer.setLayoutY(board.getInitialY() - 60);
 
-        //layout.getChildren().add(blackPlayer);
+        layout.getChildren().add(blackPlayer);
     }
 
     public Pane display(){
