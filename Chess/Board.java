@@ -8,21 +8,13 @@ import java.util.Set;
 
 import Chess.Pieces.*;
 
-import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.web.WebHistory;
 import java.lang.*;
 
 public class Board {
     final public static int widthSquares = 8;
     final public static int heightSquares = 8;
-    private int initialX;
-    private int initialY;
-    private int width;
-    private int height;
     private Tile[][] board;
     private Boolean isWhiteMove;
-    private GridPane buttonGrid;
     private King whiteKing;
     private King blackKing;
     private Deque<Action> stack;
@@ -40,7 +32,6 @@ public class Board {
         long startTime, endTime;
         whitePieces = new HashSet<>();
         blackPieces = new HashSet<>();
-        buttonGrid = new GridPane();
 
         isWhiteMove = true;
         stack = new ArrayDeque<>();
@@ -146,44 +137,8 @@ public class Board {
         fullMoveCounter = Character.getNumericValue(FEN.charAt(i+2));
     }
 
-    public GridPane display(int initialX, int initialY, int width, int height){
-        this.initialX = initialX;
-        this.initialY = initialY;
-        this.width = width;
-        this.height = height;
-
-        buttonGrid = new GridPane();
-        buttonGrid.setLayoutX(initialX);
-        buttonGrid.setLayoutY(initialY);
-        buttonGrid.setAlignment(Pos.CENTER);
-        buttonGrid.setPrefSize(8*20, 8*20);
-
-        Tile tile;
-        for(int x = 0; x < widthSquares; ++x){
-            for(int y = 0; y< heightSquares; ++y){
-                tile = board[x][y];
-                tile.display(width/widthSquares, height/heightSquares);
-                buttonGrid.add(tile.getStackPane(), x, y);
-            }
-        }
-
-        return buttonGrid;
-    }
-
-    public GridPane getButtons(){
-        return buttonGrid;
-    }
-
     public Boolean isWhiteMove(){
         return isWhiteMove;
-    }
-
-    public int getWidth(){
-        return width;
-    }
-
-    public int getHeight(){
-        return height;
     }
 
     public Tile getTargetSquare() {
@@ -253,12 +208,6 @@ public class Board {
 
     public Action getLastAction(){
         return stack.peek();
-    }
-
-    public int[] pixelToTileCoords(double pixelX, double pixelY){
-        int tileX = (int) (pixelX - initialX) / (width/widthSquares);
-        int tileY = (int) (pixelY - initialY) / (height/heightSquares);
-        return new int[] {tileX, tileY};
     }
 
     public void addPiece(Piece piece){
@@ -333,34 +282,8 @@ public class Board {
         board[ix][iy].addPiece(initialPiece);
     }
 
-    public void showAction(Action action){
-        Move move = action.getMove();
-        while(move != null){
-            board[move.getInitialX()][move.getInitialY()].updateDisplay();
-            board[move.getFinalX()][move.getFinalY()].updateDisplay();
-            move = move.getNextMove();
-        }
-        System.out.println(toString());
-    }
-
-    public int getInitialX(){
-        return initialX;
-    }
-
-    public int getInitialY(){
-        return initialY;
-    }
-
     public King getKing(Boolean isWhite){
         return isWhite ? whiteKing : blackKing;
-    }
-
-    public int getTileWidth(){
-        return width / 8;
-    }
-
-    public int getTileHeight(){
-        return height / 8;
     }
 
     public Boolean isInCheck(Boolean isWhite){
