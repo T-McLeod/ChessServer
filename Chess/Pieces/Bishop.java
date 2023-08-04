@@ -2,15 +2,11 @@ package Chess.Pieces;
 
 import Chess.Board;
 import Chess.Piece;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import Chess.Move;
 
 public class Bishop extends Piece{
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Bishop.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Bishop.png");
 
     public Bishop(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
@@ -133,15 +129,6 @@ public class Bishop extends Piece{
             }
         }
         return false;
-    }
-
-    public static Image getImage(boolean isWhite){
-        return isWhite ? whiteIMG : blackIMG;
-    }
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

@@ -8,7 +8,6 @@ import Chess.Pieces.Rook;
 
 public class Move {
     Piece initialPiece;
-    //Piece finalPiece; // X
     int initialX;
     int initialY;
     int finalX;

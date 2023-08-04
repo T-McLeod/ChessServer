@@ -2,14 +2,10 @@ package Chess.Pieces;
 
 import Chess.Board;
 import Chess.Piece;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import Chess.Move;
 import java.util.ArrayList;
 
 public class Rook extends Piece{
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Rook.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Rook.png");
     public Boolean hasMoved;
 
     public Rook(Board board, int x, int y, Boolean isWhite){
@@ -86,10 +82,6 @@ public class Rook extends Piece{
         return moves;
     }
 
-    public static Image getImage(boolean isWhite){
-        return isWhite ? whiteIMG : blackIMG;
-    }
-
     @Override
     public void move(int x, int y){
         this.xPosition = x;
@@ -151,11 +143,6 @@ public class Rook extends Piece{
         }
 
         return false;
-    }
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

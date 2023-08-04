@@ -3,27 +3,14 @@ package Chess.Pieces;
 import Chess.Board;
 import Chess.Piece;
 import Chess.Tile;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import Chess.Move;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javax.swing.text.Position;
-
 public class Pawn extends Piece{
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Pawn.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Pawn.png");
 
     public Pawn(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
-    }
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override
@@ -109,63 +96,6 @@ public class Pawn extends Piece{
             move.setNextMove(new Move(new Bishop(board, fx, fy, isWhite), fx, fy));
         }
         super.addMove(moves, move);
-    }
-
-    public void promptForPromotion(Move move){
-        int x = move.getFinalX(), y = move.getFinalY();
-        board.showAction(board.move(move));
-        Tile[] affectedTiles = new Tile[5];
-        int yDirection = isWhite ? -1 : 1;
-        for(int i = 0; i < 5; i++){
-            affectedTiles[i] = board.getTile(x, y + -1 * i * yDirection);
-        }
-
-        //Piece initialPiece = move.getInitialPiece();
-        //int ix = initialPiece.getX(), int iy
-        ImageView queenProm = new ImageView(Queen.getImage(isWhite));
-        queenProm.setOnMousePressed(e -> {
-            board.unmove();
-            move.setNextMove(new Move(new Queen(board, x, y, isWhite), x, y));
-            board.showAction(board.move(move));
-            for(Tile tile : affectedTiles){
-                tile.updateDisplay();
-            }
-        });
-        affectedTiles[1].addImageView(queenProm);
-
-        ImageView knightProm = new ImageView(Knight.getImage(isWhite));
-        knightProm.setOnMousePressed(e -> {
-            board.unmove();
-            move.setNextMove(new Move(new Knight(board, x, y, isWhite), x, y));
-            board.showAction(board.move(move));
-            for(Tile tile : affectedTiles){
-                tile.updateDisplay();
-            }
-        });
-        affectedTiles[2].addImageView(knightProm);
-
-        ImageView rookProm = new ImageView(Rook.getImage(isWhite));
-        rookProm.setOnMousePressed(e -> {
-            board.unmove();
-            move.setNextMove(new Move(new Rook(board, x, y, isWhite), x, y));
-            board.showAction(board.move(move));
-            for(Tile tile : affectedTiles){
-                tile.updateDisplay();
-            }
-        });
-        affectedTiles[3].addImageView(rookProm);
-
-        ImageView bishopProm = new ImageView(Bishop.getImage(isWhite));
-        bishopProm.setOnMousePressed(e -> {
-            board.unmove();
-            move.setNextMove(new Move(new Bishop(board, x, y, isWhite), x, y));
-            board.showAction(board.move(move));
-            for(Tile tile : affectedTiles){
-                tile.updateDisplay();
-            }
-        });
-        affectedTiles[4].addImageView(bishopProm);
-
     }
 
     @Override

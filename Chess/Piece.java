@@ -3,8 +3,6 @@ package Chess;
 import java.util.ArrayList;
 
 import Chess.Pieces.Pawn;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public abstract class Piece {
     static double mouseIX;
@@ -15,7 +13,6 @@ public abstract class Piece {
     protected Board board;
     protected int xPosition;
     protected int yPosition;
-    protected ImageView graphic;
 
     public Piece(Board board, int x, int y, Boolean isWhite){
         this.board = board;
@@ -25,68 +22,7 @@ public abstract class Piece {
 
     }
 
-    public void displayPiece(int width, int height){
-        graphic = new ImageView();
-        graphic.setImage(getImage());
-        graphic.setPreserveRatio(true);
-        graphic.setFitWidth(width/4*3);
-        graphic.setFitHeight(height/4*3);
-
-        graphic.setOnMousePressed(e -> {
-            if(board.isWhiteMove() == isWhite){
-                board.getTile(xPosition, yPosition).toFront();
-                mouseIX = e.getSceneX();
-                mouseIY = e.getSceneY();
-                pieceIX = graphic.getTranslateX();
-                pieceIY = graphic.getTranslateY();
-                ArrayList<Move> moves = getLegalMoves();
-                for(int i = 0; i < moves.size(); ++i){
-                    Move move = moves.get(i);
-                    board.getTile(move.getFinalX(), move.getFinalY()).addCursor();
-                }
-            }
-        });
-
-        graphic.setOnMouseDragged(e -> {
-            if(board.isWhiteMove() == isWhite){
-                graphic.setTranslateX(pieceIX + e.getSceneX() - mouseIX);
-                graphic.setTranslateY(pieceIY + e.getSceneY() - mouseIY);
-            }
-        });
-
-        graphic.setOnMouseReleased(e -> { //Redundant, may want to revise how it calls getMoves() again everytime
-            if(board.isWhiteMove() == isWhite){
-                graphic.setTranslateX(0);
-                graphic.setTranslateY(0);
-
-                ArrayList<Move> moves = getLegalMoves();
-                for(int i = 0; i < moves.size(); ++i){
-                    Move move = moves.get(i);
-                    board.getTile(move.getFinalX(), move.getFinalY()).removeCursor();
-                }
-                int[] finalPosition = board.pixelToTileCoords(e.getSceneX(), e.getSceneY());
-                if(Board.isValid(finalPosition[0], finalPosition[1])){
-                    Move move = new Move(this, finalPosition[0], finalPosition[1]);
-                    for(int i = 0; i < moves.size(); ++i){
-                        if(move.equals(moves.get(i))){
-                            if(move.getInitialPiece() instanceof Pawn && (move.getFinalY() == 0 || move.getFinalY() == 7)){
-                                Pawn pawn = (Pawn) move.getInitialPiece();
-                                pawn.promptForPromotion(move);
-                                return;
-                            }
-                            move = moves.get(i);
-                            board.showAction(board.move(move));
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    public Image getImage(){
-        return null;
-    }
+    
 
     public Boolean getIsWhite(){
         return isWhite;
@@ -107,12 +43,6 @@ public abstract class Piece {
 
     public ArrayList<Move> getLegalMoves(){
         return null;
-    }
-
-    public ImageView getGraphic(){
-        if(graphic == null)
-            displayPiece(board.getTileWidth(), board.getTileHeight());
-        return graphic;
     }
 
     public Boolean getHasMoved(){

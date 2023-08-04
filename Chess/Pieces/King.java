@@ -7,12 +7,8 @@ import javax.sound.sampled.AudioFileFormat.Type;
 import Chess.Board;
 import Chess.Move;
 import Chess.Piece;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class King extends Piece{
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/King.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/King.png");
     Boolean hasMoved;
     Rook kingSide; //unused
     Rook queenSide; //unused
@@ -236,11 +232,6 @@ public class King extends Piece{
             addMove(moves, x, y);
         }
     }*/
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
-    }
 
     @Override
     public String toString(){

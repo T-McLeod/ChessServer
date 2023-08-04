@@ -2,14 +2,10 @@ package Chess.Pieces;
 
 import Chess.Board;
 import Chess.Piece;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import Chess.Move;
 import java.util.ArrayList;
 
 public class Knight extends Piece {
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Knight.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Knight.png");
 
     public Knight(Board board, int x, int y, Boolean isWhite){
         super(board, x, y, isWhite);
@@ -47,15 +43,6 @@ public class Knight extends Piece {
         }
         
         return false;
-    }
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
-    }
-
-    public static Image getImage(boolean isWhite){
-        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override

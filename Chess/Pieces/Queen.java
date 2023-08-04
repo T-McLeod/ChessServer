@@ -5,12 +5,8 @@ import java.util.ArrayList;
 import Chess.Board;
 import Chess.Move;
 import Chess.Piece;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class Queen extends Piece{
-    private static final Image whiteIMG = new Image("./Chess/Assets/Pieces/White/Queen.png");
-    private static final Image blackIMG = new Image("./Chess/Assets/Pieces/Black/Queen.png");
     Boolean hasMoved;
 
     public Queen(Board board, int x, int y, Boolean isWhite){
@@ -234,15 +230,6 @@ public class Queen extends Piece{
         }
 
         return false;
-    }
-
-    @Override
-    public Image getImage(){
-        return isWhite ? whiteIMG : blackIMG;
-    }
-
-    public static Image getImage(boolean isWhite){
-        return isWhite ? whiteIMG : blackIMG;
     }
 
     @Override
