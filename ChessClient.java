@@ -4,6 +4,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import Chess.Move;
+import Chess.MoveExchange;
 
 public class ChessClient {
     private Socket clientSocket;

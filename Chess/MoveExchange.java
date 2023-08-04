@@ -1,9 +1,6 @@
+package Chess;
 import java.io.*;
 import java.net.*;
-
-import Chess.Board;
-import Chess.Move;
-import Chess.Piece;
 
 public class MoveExchange implements Serializable {
     int initialX;

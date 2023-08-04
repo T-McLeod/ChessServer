@@ -29,15 +29,17 @@ public class ChessServer {
         private Socket clientSocket;
         private ObjectOutputStream out;
         private ObjectInputStream in;
+        private Game game;
 
         public ChessClient(Socket socket){
             this.clientSocket = socket;
+            game = new Game();
 
             System.out.println("Client Found: " + socket.toString());
         }
 
         public void run(){
-            Board board = new Game().getBoard();
+            Board board = game.getBoard();
             MoveExchange inputMove;
             System.out.println("Waiting");
             try{
@@ -45,23 +47,15 @@ public class ChessServer {
                 in = new ObjectInputStream(clientSocket.getInputStream());
                 while((inputMove = (MoveExchange) in.readObject()) != null){
                     Move move = inputMove.toMove(board);
-                    System.out.println("Move: " + move);
+                    board.move(move);
                     out.writeObject(new MoveExchange(board.getMoves().get(0)));
                 }
-
-                
             } catch(IOException e){
                 System.err.println(e);
             } catch (ClassNotFoundException e){
                 System.err.println(e);
             }
         }
-    }
-
-    public static void main(String[] args) {
-        ChessServer server=new ChessServer();
-        server.start(8888
-        );
     }
 
 }
